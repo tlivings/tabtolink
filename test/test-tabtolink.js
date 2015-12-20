@@ -3,9 +3,9 @@
 
 
 import Test from 'tape';
-import Tabtolink from '../lib';
-import Readlines from '../lib/readlines';
-import Map from '../lib/map';
+import Tabtolink from '../dist/lib';
+import Readlines from '../dist/lib/readlines';
+import Map from '../dist/lib/map';
 import {Observable} from 'rx';
 import Fs from 'fs';
 
@@ -17,31 +17,33 @@ Test('test mapping', (t) => {
         Map(Readlines(Fs.createReadStream('./test/fixtures/testreadline.csv'))).doOnNext(t.ok).doOnCompleted(t.pass).subscribe();
     });
 
-    // t.test('readline', (t) => {
-    //     t.plan(3);
-    //
-    //     let lines = Readlines(Fs.createReadStream('./test/fixtures/testreadline.csv'));
-    //
-    //     Map(lines).subscribe(
-    //         (x) => console.log(x),
-    //         () => {},
-    //         () => {
-    //         }
-    //     );
-    // });
+    t.test('readline', (t) => {
+        t.plan(3);
+
+        let lines = Readlines(Fs.createReadStream('./test/fixtures/testreadline.csv'));
+
+        Map(lines).subscribe(
+            (x) => {
+                t.ok(x);
+            },
+            () => {},
+            () => {
+                t.pass();
+            }
+        );
+    });
 
 });
 
-Test.only('test', (t) => {
+Test('test api', (t) => {
     t.plan(3);
 
-    let reader = Tabtolink.createReader(Fs.createReadStream('./test/fixtures/testreadline.csv'));
+    let reader = Tabtolink.create(Fs.createReadStream('./test/fixtures/testreadline.csv'));
 
     reader.on('readable', () => {
         let obj;
 
         while((obj = reader.read()) !== null) {
-            console.log(obj);
             t.ok(obj);
         }
     });
