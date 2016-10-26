@@ -12,9 +12,13 @@ import Fs from 'fs';
 Test('test mapping', (t) => {
 
     t.test('map', (t) => {
-        t.plan(3);
+        t.plan(7);
 
-        Map(Readlines(Fs.createReadStream('./test/fixtures/testreadline.csv'))).doOnNext(t.ok).doOnCompleted(t.pass).subscribe();
+        Map(Readlines(Fs.createReadStream('./test/fixtures/testreadline.csv'))).doOnNext((x) => {
+            t.ok(x.colA);
+            t.ok(x.colB);
+            t.ok(x.colC);
+        }).doOnCompleted(t.pass).subscribe();
     });
 
     t.test('readline', (t) => {
